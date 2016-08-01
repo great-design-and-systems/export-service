@@ -18,14 +18,14 @@
 
       beforeEach(function() {
         exportTracker.description = 'Smple tracker 1';
-        exportTracker.type = 'csv_exporter';
         exportTracker.progressLimit = 10;
+        exportTracker.columns = ['when', 'fullname'];
       });
 
-      describe('WHEN: creating new export', function() {
+      describe('WHEN: creating new export csv', function() {
         var createdExportId;
         beforeEach(function(done) {
-          Export.createExport(exportTracker.description, exportTracker.type, exportTracker.progressLimit, function(err, result) {
+          Export.createExportCSV(exportTracker.description, exportTracker.progressLimit, exportTracker.columns, function(err, result) {
             if (err) {
               console.error('Creating new export', err);
             }

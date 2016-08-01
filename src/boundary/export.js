@@ -1,20 +1,27 @@
 'use strict';
 var CreateExportTracker = require('../control/create-export-tracker');
+var CreateItemColumns = require('../control/create-item-columns');
 module.exports = {
-  createExport: createExport
+  createExportCSV: createExportCSV
 };
 
-function createExport(description, type, limit, callback) {
+function createExportCSV(description, limit, columns, callback) {
   new CreateExportTracker({
     description: description,
-    type: type,
+    type: 'csv_exporter',
     progressLimit: limit
   }, function(errCreateExport, resultCreateExport) {
     if (errCreateExport) {
       callback(errCreateExport);
     } else {
-      callback(undefined, {
-        exportId: resultCreateExport._id
+      new CreateItemColumns(resultCreateExport._id, columns, function(errCreateItemColumns) {
+        if (errCreateItemColumns) {
+          callback(errCreateItemColumns);
+        } else {
+          callback(undefined, {
+            exportId: resultCreateExport._id
+          });
+        }
       });
     }
   });
