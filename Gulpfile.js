@@ -20,8 +20,7 @@ gulp.task('test', function() {
       read: false
     })
     .pipe(mocha({
-      timeout: 20000,
-      reporter: 'nyan'
+      timeout: 20000
     }));
 });
 
