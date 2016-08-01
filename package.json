@@ -35,6 +35,7 @@
     "lodash": "^4.13.1",
     "log4js": "^0.6.38",
     "mocha": "^2.5.3",
+    "mocha-unfunk-reporter": "^0.4.0",
     "mongoose": "^4.5.3",
     "morgan": "^1.7.0",
     "multer": "^1.1.0",

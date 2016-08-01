@@ -1,9 +1,10 @@
 'use strict';
 var CreateExportTracker = require('../control/create-export-tracker');
 var CreateItemColumns = require('../control/create-item-columns');
-var CreateCSVFile = require('../control/csv/create-csv-file');
 var AddExportProgress = require('../control/add-export-progress');
 var AddItemCSV = require('../control/csv/add-item');
+var GetCSVFile = require('../control/csv/get-csv-file');
+var fs = require('fs-extra');
 module.exports = {
   createExportCSV: createExportCSV,
   addExportItemCSV: addExportItemCSV
@@ -14,23 +15,16 @@ function createExportCSV(description, limit, columns, callback) {
     description: description,
     type: 'csv_exporter',
     progressLimit: limit
-  }, function(errCreateExport, resultCreateExport) {
+  }, function (errCreateExport, resultCreateExport) {
     if (errCreateExport) {
       callback(errCreateExport);
     } else {
-      new CreateItemColumns(resultCreateExport._id, columns, function(errCreateItemColumns) {
+      new CreateItemColumns(resultCreateExport._id, columns, function (errCreateItemColumns) {
         if (errCreateItemColumns) {
           callback(errCreateItemColumns);
         } else {
-          new CreateCSVFile(resultCreateExport._id, function(errCreateCSVFile, tempFilePath) {
-            if (errCreateCSVFile) {
-              callback(errCreateCSVFile);
-            } else {
-              callback(undefined, {
-                exportId: resultCreateExport._id,
-                tempFile: tempFilePath.path
-              });
-            }
+          callback(undefined, {
+            exportId: resultCreateExport._id
           });
         }
       });
@@ -39,17 +33,29 @@ function createExportCSV(description, limit, columns, callback) {
 }
 
 function addExportItemCSV(exportId, item, callback) {
-  new AddItemCSV(exportId, item, function(errAddItem) {
+  new AddItemCSV(exportId, item, function (errAddItem) {
     if (errAddItem) {
       callback(errAddItem);
     } else {
-      console.log('AddItemCSV');
-      new AddExportProgress(exportId, function(errExportProgress, resultExportProgress) {
+      new AddExportProgress(exportId, function (errExportProgress, resultExportProgress) {
         if (errExportProgress) {
           callback(errExportProgress);
         } else {
-          console.log('resultExportProgress', resultExportProgress);
-          callback(undefined, resultExportProgress);
+          if (resultExportProgress.status === 'COMPLETED') {
+            new GetCSVFile(exportId, function (errCSVFile, csvFilePath) {
+              if (errCSVFile) {
+                callback(errCSVFile);
+              } else {
+                resultExportProgress.stream = fs.createReadStream(csvFilePath.path);
+                resultExportProgress.removeFile = function () {
+                  fs.remove(csvFilePath.path);
+                };
+                callback(undefined, resultExportProgress);
+              }
+            });
+          } else {
+            callback(undefined, resultExportProgress);
+          }
         }
       });
     }

@@ -20,6 +20,7 @@ gulp.task('test', function() {
       read: false
     })
     .pipe(mocha({
+      reporter: 'mocha-unfunk-reporter',
       timeout: 20000
     }));
 });

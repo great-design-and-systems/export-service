@@ -4,14 +4,15 @@ var CSVWriter = require('csv-write-stream');
 var fs = require('node-fs');
 
 function execute(exportId, data, callback) {
-  new GetCSVFile(exportId, function(errCsvFile, csvPath) {
+  new GetCSVFile(exportId, function (errCsvFile, csvPath) {
     if (errCsvFile) {
       console.error('add-item', errCsvFile);
       callback(errCsvFile);
     } else {
       try {
-        var writer = CSVWriter();
-        writer.pipe(fs.createReadSteam(csvPath));
+        var header = !fs.existsSync(csvPath.path);
+        var writer = CSVWriter({ sendHeaders: header });
+        writer.pipe(fs.createWriteStream(csvPath.path, { flags: 'a' }));
         writer.write(data);
         writer.end();
         callback(undefined, {
@@ -19,6 +20,7 @@ function execute(exportId, data, callback) {
           data: data
         });
       } catch (err) {
+        console.error('add-item', err);
         callback({
           message: 'Error writing data ' + data
         });
