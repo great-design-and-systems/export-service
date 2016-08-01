@@ -11,50 +11,50 @@ var TEST_FILES = process.env.TEST_FILES || 'test/**/*.bdd.js';
 var SRC_FILES = process.env.SRC_FILES || 'src/**/*.js';
 var INDEX_FILE = 'index.js';
 
-gulp.task('default', function () {
-    runSequence('jshint', 'test');
+gulp.task('default', function() {
+  runSequence('jshint', 'test');
 });
 
-gulp.task('test', function () {
-    return gulp.src(TEST_FILES, {
-        read: false
+gulp.task('test', function() {
+  return gulp.src(TEST_FILES, {
+      read: false
     })
-        .pipe(mocha())
-        .pipe(mocha({
-            reporter: 'nyan'
-        }));
+    .pipe(mocha({
+      timeout: 20000,
+      reporter: 'nyan'
+    }));
 });
 
-gulp.task('jshint', function () {
-    return gulp.src(SRC_FILES)
-        .pipe(jshint())
-        .pipe(jshint.reporter(stylish))
-        .pipe(jshint.reporter('fail'));
+gulp.task('jshint', function() {
+  return gulp.src(SRC_FILES)
+    .pipe(jshint())
+    .pipe(jshint.reporter(stylish))
+    .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('watch', function () {
-    return gulp.watch([SRC_FILES, TEST_FILES], ['default']);
+gulp.task('watch', function() {
+  return gulp.watch([SRC_FILES, TEST_FILES], ['default']);
 });
 
-gulp.task('server-start', function () {
-    server.run([INDEX_FILE]);
+gulp.task('server-start', function() {
+  server.run([INDEX_FILE]);
 });
 
-gulp.task('server-stop', function () {
-    server.stop();
+gulp.task('server-stop', function() {
+  server.stop();
 });
 
-gulp.task('server-restart', function () {
-    runSequence('server-stop', 'server-start');
+gulp.task('server-restart', function() {
+  runSequence('server-stop', 'server-start');
 })
 
-gulp.task('server-watch', function () {
-    server.run([INDEX_FILE]);
-    gulp.watch([SRC_FILES, TEST_FILES], function (event) {
-        server.notify(event);
-    });
+gulp.task('server-watch', function() {
+  server.run([INDEX_FILE]);
+  gulp.watch([SRC_FILES, TEST_FILES], function(event) {
+    server.notify(event);
+  });
 });
 
-gulp.task('start', function () {
-    runSequence('jshint', 'test', 'server-start');
+gulp.task('start', function() {
+  runSequence('jshint', 'test', 'server-start');
 })
