@@ -5,9 +5,11 @@ var AddExportProgress = require('../control/add-export-progress');
 var AddItemCSV = require('../control/csv/add-item');
 var GetCSVFile = require('../control/csv/get-csv-file');
 var fs = require('fs-extra');
+var UpdateExportFileInfo = require('../control/csv/update-export-file-info');
 module.exports = {
   createExportCSV: createExportCSV,
-  addExportItemCSV: addExportItemCSV
+  addExportItemCSV: addExportItemCSV,
+  updateExportCSVFileInfo: updateExportCSVFileInfo
 };
 
 function createExportCSV(description, limit, columns, callback) {
@@ -59,6 +61,16 @@ function addExportItemCSV(exportId, item, callback) {
           }
         }
       });
+    }
+  });
+}
+
+function updateExportCSVFileInfo(exportId, fileId, callback) {
+  new UpdateExportFileInfo(exportId, fileId, function (err, result) {
+    if (err) {
+      callback(err);
+    } else {
+      callback(undefined, result);
     }
   });
 }

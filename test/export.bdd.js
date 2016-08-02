@@ -76,6 +76,24 @@
                 addExportResult2nd.removeFile();
               });
             });
+            describe('GIVEN: I have uploaded file ID', function () {
+              var fileID;
+              beforeEach(function () {
+                fileID = '00001';
+              });
+              describe('WHEN: updating export csv info', function () {
+                var fileInfoResult;
+                beforeEach(function (done) {
+                  Export.updateExportCSVFileInfo(createdExportId, fileID, function (err, result) {
+                    fileInfoResult = result;
+                    done();
+                  });
+                });
+                it('THEN: export tracker fileID is updated', function () {
+                  expect(fileInfoResult.ok === 1).to.be.true;
+                });
+              });
+            });
           });
         });
       });
