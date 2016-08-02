@@ -20,13 +20,12 @@
       beforeEach(function () {
         exportTracker.description = 'Smple tracker 1';
         exportTracker.progressLimit = 2;
-        exportTracker.columns = ['when', 'fullname'];
       });
 
       describe('WHEN: creating new export csv', function () {
         var createdExportId;
         beforeEach(function (done) {
-          Export.createExportCSV(exportTracker.description, exportTracker.progressLimit, exportTracker.columns, function (err, result) {
+          Export.createExportCSV(exportTracker.description, exportTracker.progressLimit, function (err, result) {
             if (err) {
               console.error('Creating new export', err);
             }
@@ -61,6 +60,7 @@
 
             it('THEN: export tracker count is incremented', function () {
               expect(addExportResult1st.nModified === 1).to.be.true;
+              expect(addExportResult1st.progressCount === 1).to.be.true;
             });
 
             describe('WHEN: adding another export item csv', function () {

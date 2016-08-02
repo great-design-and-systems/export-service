@@ -1,18 +1,25 @@
 'use strict';
 var CreateExportTracker = require('../control/create-export-tracker');
-var CreateItemColumns = require('../control/create-item-columns');
 var AddExportProgress = require('../control/add-export-progress');
 var AddItemCSV = require('../control/csv/add-item');
 var GetCSVFile = require('../control/csv/get-csv-file');
 var fs = require('fs-extra');
 var UpdateExportFileInfo = require('../control/csv/update-export-file-info');
+var GetExportCompleted = require('../control/get-export-completed');
+var GetExportInProgress = require('../control/get-export-inprogress');
+var RemoveExportTrackerById = require('../control/remove-export-tracker-by-id');
+var RemoveCompletedTracker = require('../control/remove-completed-tracker');
 module.exports = {
   createExportCSV: createExportCSV,
   addExportItemCSV: addExportItemCSV,
-  updateExportCSVFileInfo: updateExportCSVFileInfo
+  updateExportCSVFileInfo: updateExportCSVFileInfo,
+  getExportCompleted: getExportCompleted,
+  getExportInProgress: getExportInProgress,
+  removeExportTrackerById: removeExportTrackerById,
+  removeCompletedExportTracker: removeCompletedExportTracker
 };
 
-function createExportCSV(description, limit, columns, callback) {
+function createExportCSV(description, limit, callback) {
   new CreateExportTracker({
     description: description,
     type: 'csv_exporter',
@@ -21,14 +28,8 @@ function createExportCSV(description, limit, columns, callback) {
     if (errCreateExport) {
       callback(errCreateExport);
     } else {
-      new CreateItemColumns(resultCreateExport._id, columns, function (errCreateItemColumns) {
-        if (errCreateItemColumns) {
-          callback(errCreateItemColumns);
-        } else {
-          callback(undefined, {
-            exportId: resultCreateExport._id
-          });
-        }
+      callback(undefined, {
+        exportId: resultCreateExport._id
       });
     }
   });
@@ -76,6 +77,34 @@ function addExportItemCSV(exportId, item, callback) {
 
 function updateExportCSVFileInfo(exportId, fileId, callback) {
   new UpdateExportFileInfo(exportId, fileId, function (err, result) {
+    if (err) {
+      callback(err);
+    } else {
+      callback(undefined, result);
+    }
+  });
+}
+
+function getExportCompleted(callback) {
+  new GetExportCompleted(callback);
+}
+
+function getExportInProgress(callback) {
+  new GetExportInProgress(callback);
+}
+
+function removeExportTrackerById(exportId, callback) {
+  new RemoveExportTrackerById(exportId, function (err, result) {
+    if (err) {
+      callback(err);
+    } else {
+      callback(undefined, result);
+    }
+  });
+}
+
+function removeCompletedExportTracker(callback) {
+  new RemoveCompletedTracker(function (err, result) {
     if (err) {
       callback(err);
     } else {

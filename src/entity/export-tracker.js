@@ -8,7 +8,7 @@ var exportTrackerSchema = new mongoose.Schema({
   status: {
     type: String,
     default: 'NEW',
-    enum: ['NEW', 'STARTED', 'INPROGRESS', 'CANCELLED', 'COMPLETED']
+    enum: ['NEW', 'INPROGRESS', 'FAILED', 'COMPLETED']
   },
   progressCount: {
     type: Number,

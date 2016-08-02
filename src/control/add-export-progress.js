@@ -13,7 +13,8 @@ function execute(exportId, callback) {
         exportTracker.progressCount++;
         if (exportTracker.progressCount === 1) {
           exportTracker.status = 'INPROGRESS';
-        } else if (exportTracker.progressCount === exportTracker.progressLimit) {
+        }
+        if (exportTracker.progressCount === exportTracker.progressLimit) {
           exportTracker.status = 'COMPLETED';
         }
       }
@@ -27,7 +28,7 @@ function execute(exportId, callback) {
           });
         } else {
           updatedTracker.status = exportTracker.status;
-          updatedTracker.processCount = exportTracker.processCount;
+          updatedTracker.progressCount = exportTracker.progressCount;
           callback(undefined, updatedTracker);
         }
       });

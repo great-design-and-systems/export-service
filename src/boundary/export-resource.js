@@ -4,7 +4,7 @@ var Export = require('./export');
 module.exports = function (app) {
   app.post(API + 'create-export-csv', function (req, res) {
     Export.createExportCSV(req.body.description,
-      req.body.limit, req.body.columns,
+      req.body.limit,
       function (err, result) {
         if (err) {
           res.status(500).send(err);
@@ -49,6 +49,46 @@ module.exports = function (app) {
     });
   });
 
+  app.get(API + 'get-export-completed', function (req, res) {
+    Export.getExportCompleted(function (err, result) {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.status(200).send(result);
+      }
+    });
+  });
+
+  app.get(API + 'get-export-inprogress', function (req, res) {
+    Export.getExportInProgress(function (err, result) {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.status(200).send(result);
+      }
+    });
+  });
+
+  app.delete(API + ':exportId', function (req, res) {
+    Export.removeExportTrackerById(req.params.exportId, function (err, result) {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.status(200).send(result);
+      }
+    });
+  });
+
+  app.delete(API + 'all/completed-export-tracker', function (req, res) {
+    Export.removeCompletedExportTracker(function (err, result) {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.status(200).send(result);
+      }
+    });
+  });
+
   app.get('/', function (req, res) {
     res.status(200).send({
       domain: process.env.DOMAIN_NAME || 'Export',
@@ -59,6 +99,14 @@ module.exports = function (app) {
         put: {
           addExportItemCSV: 'http://' + req.headers.host + API + 'add-export-item-csv/{exportId}',
           updateExportCSVFileInfo: 'http://' + req.headers.host + API + 'update-export-csv-file-info/{exportId}'
+        },
+        get: {
+          getExportCompleted: 'http://' + req.headers.host + API + 'get-export-completed',
+          getExportInProgress: 'http://' + req.headers.host + API + 'get-export-inprogress'
+        },
+        delete: {
+          removeExportTrackerById: 'http://' + req.headers.host + API + '{exportId}',
+          removeCompletedExportTracker: 'http://' + req.headers.host + API + 'completed-export-tracker'
         }
       }
     });
