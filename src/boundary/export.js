@@ -50,10 +50,19 @@ function addExportItemCSV(exportId, item, callback) {
               } else {
                 resultExportProgress.stream = fs.createReadStream(csvFilePath.path);
                 resultExportProgress.fileName = exportId + '.csv';
-                resultExportProgress.removeFile = function () {
+                resultExportProgress.stream.on('end', function () {
                   fs.remove(csvFilePath.path);
-                };
-                callback(undefined, resultExportProgress);
+                });
+                fs.stat(csvFilePath.path, function (errStat, fileStat) {
+                  if (errStat) {
+                    callback({
+                      message: 'Error getting file status.'
+                    });
+                  } else {
+                    resultExportProgress.fileSize = fileStat.size;
+                    callback(undefined, resultExportProgress);
+                  }
+                });
               }
             });
           } else {

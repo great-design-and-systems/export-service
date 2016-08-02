@@ -73,7 +73,6 @@
               });
               it('THEN: export tracker is completed', function () {
                 expect(addExportResult2nd.status === 'COMPLETED').to.be.true;
-                addExportResult2nd.removeFile();
               });
             });
             describe('GIVEN: I have uploaded file ID', function () {

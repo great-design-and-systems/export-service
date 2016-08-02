@@ -30,10 +30,7 @@ module.exports = function (app) {
       } else {
         if (result.status === 'COMPLETED') {
           res.setHeader('Content-type', 'text/csv');
-          res.setHeader('Content-disposition', 'attachment; filename=' + result.fileName);
-          result.stream.on('end', function () {
-            result.removeFile();
-          });
+          res.setHeader('Content-length', result.fileSize);
           result.stream.pipe(res);
         } else {
           res.status(200).send(result);
