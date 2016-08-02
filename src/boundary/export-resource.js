@@ -11,6 +11,7 @@ module.exports = function (app) {
         } else {
           res.status(200).send({
             message: 'Export tracker is created with id: ' + result.exportId,
+            exportId: result.exportId,
             links: {
               put: {
                 addExportItemCSV: 'http://' + req.headers.host + API + 'add-export-item-csv/' + result.exportId
@@ -27,6 +28,8 @@ module.exports = function (app) {
         res.status(500).send(err);
       } else {
         if (result.status === 'COMPLETED') {
+          res.setHeader('Content-type', 'text/csv');
+          res.setHeader('Content-disposition', 'attachment; filename=' + result.fileName);
           result.stream.on('end', function () {
             result.removeFile();
           });
@@ -37,4 +40,19 @@ module.exports = function (app) {
       }
     });
   });
+
+  app.get('/', function (req, res) {
+    res.status(200).send({
+      domain: process.env.DOMAIN_NAME || 'Export',
+      links: {
+        post: {
+          createExportCSV: 'http://' + req.headers.host + API + 'create-export-csv',
+        },
+        put: {
+          addExportItemCSV: 'http://' + req.headers.host + API + 'add-export-item-csv/{exportId}'
+        }
+      }
+    });
+  });
+
 };

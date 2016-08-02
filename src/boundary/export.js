@@ -47,6 +47,7 @@ function addExportItemCSV(exportId, item, callback) {
                 callback(errCSVFile);
               } else {
                 resultExportProgress.stream = fs.createReadStream(csvFilePath.path);
+                resultExportProgress.fileName = exportId + '.csv';
                 resultExportProgress.removeFile = function () {
                   fs.remove(csvFilePath.path);
                 };
