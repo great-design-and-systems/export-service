@@ -96,7 +96,7 @@ module.exports = function (app) {
       } else {
         res.status(200).send(result);
       }
-    })
+    });
   });
 
   app.get('/', function (req, res) {
