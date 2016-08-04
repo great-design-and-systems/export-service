@@ -59,6 +59,16 @@ module.exports = function (app) {
     });
   });
 
+  app.get(API + 'get-export-failed', function (req, res) {
+    Export.getExportFailed(function (err, result) {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.status(200).send(result);
+      }
+    });
+  });
+
   app.get(API + 'get-export-inprogress', function (req, res) {
     Export.getExportInProgress(function (err, result) {
       if (err) {
@@ -113,7 +123,8 @@ module.exports = function (app) {
         },
         get: {
           getExportCompleted: 'http://' + req.headers.host + API + 'get-export-completed',
-          getExportInProgress: 'http://' + req.headers.host + API + 'get-export-inprogress'
+          getExportInProgress: 'http://' + req.headers.host + API + 'get-export-inprogress',
+          getExportFailed: 'http://' + req.headers.host + API + 'get-export-failed'
         },
         delete: {
           removeExportTrackerById: 'http://' + req.headers.host + API + '{exportId}',
