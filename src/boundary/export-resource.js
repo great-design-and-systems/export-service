@@ -89,6 +89,16 @@ module.exports = function (app) {
     });
   });
 
+  app.put(API + 'fail-export-tracker/:exportId', function (req, res) {
+    Export.failExportTracker(req.params.exportId, function (err, result) {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.status(200).send(result);
+      }
+    })
+  });
+
   app.get('/', function (req, res) {
     res.status(200).send({
       domain: process.env.DOMAIN_NAME || 'Export',
@@ -98,7 +108,8 @@ module.exports = function (app) {
         },
         put: {
           addExportItemCSV: 'http://' + req.headers.host + API + 'add-export-item-csv/{exportId}',
-          updateExportCSVFileInfo: 'http://' + req.headers.host + API + 'update-export-csv-file-info/{exportId}'
+          updateExportCSVFileInfo: 'http://' + req.headers.host + API + 'update-export-csv-file-info/{exportId}',
+          failExportTracker: 'http://' + req.headers.host + API + 'fail-export-tracker/{exportId}'
         },
         get: {
           getExportCompleted: 'http://' + req.headers.host + API + 'get-export-completed',
