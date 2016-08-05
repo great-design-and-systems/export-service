@@ -113,22 +113,41 @@ module.exports = function (app) {
     res.status(200).send({
       domain: process.env.DOMAIN_NAME || 'Export',
       links: {
-        post: {
-          createExportCSV: 'http://' + req.headers.host + API + 'create-export-csv',
+        createExportCSV: {
+          method: 'POST',
+          url: 'http://' + req.headers.host + API + 'create-export-csv'
         },
-        put: {
-          addExportItemCSV: 'http://' + req.headers.host + API + 'add-export-item-csv/{exportId}',
-          updateExportCSVFileInfo: 'http://' + req.headers.host + API + 'update-export-csv-file-info/{exportId}',
-          failExportTracker: 'http://' + req.headers.host + API + 'fail-export-tracker/{exportId}'
+        addExportItemCSV: {
+          method: 'PUT',
+          url: 'http://' + req.headers.host + API + 'add-export-item-csv/:exportId'
         },
-        get: {
-          getExportCompleted: 'http://' + req.headers.host + API + 'get-export-completed',
-          getExportInProgress: 'http://' + req.headers.host + API + 'get-export-inprogress',
-          getExportFailed: 'http://' + req.headers.host + API + 'get-export-failed'
+        updateExportCSVFileInfo: {
+          method: 'PUT',
+          url: 'http://' + req.headers.host + API + 'update-export-csv-file-info/:exportId'
         },
-        delete: {
-          removeExportTrackerById: 'http://' + req.headers.host + API + '{exportId}',
-          removeCompletedExportTracker: 'http://' + req.headers.host + API + 'completed-export-tracker'
+        failExportTracker: {
+          method: 'PUT',
+          url: 'http://' + req.headers.host + API + 'fail-export-tracker/:exportId'
+        },
+        getExportCompleted: {
+          method: 'GET',
+          url: 'http://' + req.headers.host + API + 'get-export-completed'
+        },
+        getExportInProgress: {
+          method: 'GET',
+          url: 'http://' + req.headers.host + API + 'get-export-inprogress'
+        },
+        getExportFailed: {
+          method: 'GET',
+          url: 'http://' + req.headers.host + API + 'get-export-failed'
+        },
+        removeExportTrackerById: {
+          method: 'DELETE',
+          url: 'http://' + req.headers.host + API + ':exportId'
+        },
+        removeCompletedExportTracker: {
+          method: 'DELETE',
+          url: 'http://' + req.headers.host + API + 'completed-export-tracker'
         }
       }
     });
