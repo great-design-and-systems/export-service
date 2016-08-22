@@ -1,5 +1,6 @@
 'use strict';
 var ExportTracker = require('../entity/export-tracker');
+var logger = require('./get-logger');
 
 function execute(callback) {
     ExportTracker.find()
@@ -7,7 +8,7 @@ function execute(callback) {
         .sort('-createdOn')
         .exec(function (err, data) {
             if (err) {
-                console.error('get-export-inprogress', err);
+                logger.error('get-export-inprogress', err);
                 callback({
                     message: 'Failed to get export in progress'
                 });

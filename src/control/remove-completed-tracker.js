@@ -1,10 +1,11 @@
 'use strict';
 var ExportTracker = require('../entity/export-tracker');
+var logger = require('./get-logger');
 
 function execute(callback) {
     ExportTracker.remove({ status: 'COMPLETED' }, function (err) {
         if (err) {
-            console.error('remove-completed-tracker', err);
+            logger.error('remove-completed-tracker', err);
             callback({
                 message: 'Failed to remove completed tracker.'
             });

@@ -1,10 +1,11 @@
 'use strict';
 var ExportTracker = require('../entity/export-tracker');
+var logger = require('./get-logger');
 
 function execute(exportId, callback) {
   ExportTracker.findById(exportId, function (errExportTracker, exportTracker) {
     if (errExportTracker) {
-      console.error('add-export-progress', errExportTracker);
+    	logger.error('add-export-progress', errExportTracker);
       callback({
         message: 'Error finding exportId ' + exportId
       });
@@ -22,7 +23,7 @@ function execute(exportId, callback) {
         _id: exportId
       }, exportTracker, function (errUpdateTracker, updatedTracker) {
         if (errUpdateTracker) {
-          console.error('add-export-progress', errUpdateTracker);
+          logger.error('add-export-progress', errUpdateTracker);
           callback({
             message: 'Error updating exportId ' + exportId
           });
